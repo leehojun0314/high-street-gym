@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Location {
+  location_id   Int     @id @default(autoincrement())
+  location_name String
+  Class         Class[]
+
+  @@map("location")
+}
+
+model Activity {
+  activity_id          Int          @id @default(autoincrement())
+  activity_name        String
+  activity_description String       @db.LongText
+  activity_duration    Int
+  activity_type        ActivityType @default(GROUP)
+  Class                Class[]
+
+  // Enum for activity_type
+  @@map("activity")
+}
+
+enum ActivityType {
+  GROUP
+  PRIVATE
+}
+
+model Blog {
+  blog_id       Int      @id @default(autoincrement())
+  blog_datetime DateTime
+  blog_user_id  Int
+  blog_title    String
+  blog_content  String
+
+  User User @relation(fields: [blog_user_id], references: [user_id], onDelete: Cascade)
+
+  @@index([blog_user_id])
+  @@map("blog")
+}
+
+model Class {
+  class_id              Int      @id @default(autoincrement())
+  class_location_id     Int
+  class_activity_id     Int
+  class_trainer_user_id Int
+  class_datetime        DateTime @db.DateTime // Nullable for recurring classes
+  class_name            String
+
+  Location Location  @relation(fields: [class_location_id], references: [location_id])
+  Activity Activity  @relation(fields: [class_activity_id], references: [activity_id])
+  User     User      @relation(fields: [class_trainer_user_id], references: [user_id])
+  Booking  Booking[]
+
+  @@index([class_location_id])
+  @@index([class_activity_id])
+  @@index([class_trainer_user_id])
+  @@map("class")
+}
+
+model Booking {
+  booking_id               Int      @id @default(autoincrement())
+  booking_user_id          Int
+  booking_class_id         Int
+  booking_created_datetime DateTime @default(now())
+
+  User  User  @relation(fields: [booking_user_id], references: [user_id])
+  Class Class @relation(fields: [booking_class_id], references: [class_id])
+
+  @@index([booking_user_id])
+  @@index([booking_class_id])
+  @@map("booking")
+}
+
+enum Weekday {
+  MON
+  TUE
+  WED
+  THU
+  FRI
+  SAT
+  SUN
+}
+
+model User {
+  user_id        Int       @id @default(autoincrement())
+  user_email     String    @unique
+  user_password  String
+  user_role      UserRole
+  user_phone     String
+  user_firstname String
+  user_lastname  String
+  gender         Gender
+  dob            DateTime?
+
+  Blog    Blog[]
+  Booking Booking[]
+  Class   Class[]
+
+  @@map("user")
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+  TRAINER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NOT_SPECIFIED
+}

@@ -1,0 +1,186 @@
+.header {
+	--primary: #4ff9da;
+	--black: #000000;
+	--white: #ffffff;
+	--red: #ff7272;
+	--grey: #838383;
+	background-color: var(--black);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 16px;
+	color: var(--white);
+	position: sticky;
+	top: 0px;
+	z-index: 99;
+}
+
+.header > div > nav > a,
+.header > div > a {
+	text-decoration: none;
+	color: inherit;
+}
+.header > div.logo {
+	font-size: 24px;
+}
+.header .book-btn.mobile {
+	display: none;
+}
+.header .nav-container.desktop {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 18px;
+}
+.header .nav-container > nav {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+.header .nav-container > nav > a:hover,
+.header .nav-container > nav > a.active {
+	color: var(--primary);
+	text-decoration: underline;
+	text-decoration-color: var(--primary);
+}
+.header .btn {
+	padding: 6px 8px;
+	color: var(--black);
+	font-weight: 500;
+	border: 2px solid var(--black);
+	border-radius: 8px;
+}
+.header .btn:hover {
+	background-color: var(--white);
+}
+.header .book-btn {
+	display: block;
+	background-color: var(--primary);
+	width: fit-content;
+	/* height: 20px; */
+	color: var(--black);
+	border: 1px solid rgba(255, 255, 255, 0);
+	box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+	box-sizing: border-box;
+	outline: 1px solid;
+	outline-color: rgba(255, 255, 255, 0.5);
+	outline-offset: 0px;
+	text-shadow: none;
+	transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+	animation: book-btn-effect 2s infinite;
+}
+.header > .nav-container > .book-btn:hover {
+	border: 1px solid;
+	box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5),
+		0 0 20px rgba(255, 255, 255, 0.2);
+	outline-color: rgba(255, 255, 255, 0);
+	outline-offset: 15px;
+	text-shadow: 1px 1px 1px #427388;
+}
+.header input#menu-toggle,
+.header label.menu-btn-container {
+	display: none;
+	cursor: pointer;
+	width: 30px;
+	height: 30px;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+}
+.header label.menu-btn-container > .menu-btn,
+.header label.menu-btn-container > .menu-btn::before,
+.header label.menu-btn-container > .menu-btn::after {
+	display: block;
+	background-color: #fff;
+	position: absolute;
+	height: 4px;
+	width: 30px;
+	transition: transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
+	border-radius: 2px;
+	box-sizing: border-box;
+}
+.header label.menu-btn-container > .menu-btn::before {
+	content: '';
+	margin-top: -8px;
+}
+.header label.menu-btn-container > .menu-btn::after {
+	content: '';
+	margin-top: 8px;
+}
+#menu-toggle:checked + .right .menu-btn-container .menu-btn::before {
+	margin-top: 0px;
+	transform: rotate(405deg);
+}
+
+#menu-toggle:checked + .right .menu-btn-container .menu-btn {
+	background: rgba(255, 255, 255, 0);
+}
+
+#menu-toggle:checked + .right .menu-btn-container .menu-btn::after {
+	margin-top: 0px;
+	transform: rotate(-405deg);
+}
+.header > nav.nav-container.mobile {
+	height: 0px;
+	overflow: hidden;
+	position: absolute;
+	transition: all 1s ease;
+	display: flex;
+	flex-direction: column;
+	left: 0;
+	background-color: var(--black);
+	top: 58px;
+	width: 100%;
+	transition: all 1s ease;
+}
+.header > .nav-container.mobile a {
+	border-top: 1px solid var(--white);
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: 20px;
+}
+.header > .nav-container.mobile a:last-child {
+	border-bottom: 1px solid var(--white);
+}
+@media (max-width: 900px) {
+	.header .book-btn.mobile {
+		display: block;
+	}
+	.header .book-btn.desktop {
+		display: none;
+	}
+	.header .right {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 20px;
+	}
+	.header div.nav-container.desktop {
+		display: none;
+	}
+	.header label.menu-btn-container {
+		display: flex;
+	}
+	.header #menu-toggle:checked ~ .nav-container.mobile {
+		height: 100vh;
+	}
+}
+@media (max-width: 350px) {
+	.header > div.logo > a {
+		content: 'HSG';
+	}
+}
+@keyframes book-btn-effect {
+	0% {
+		outline-offset: 0px;
+	}
+	100% {
+		box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5),
+			0 0 20px rgba(255, 255, 255, 0.2);
+		outline-color: rgba(255, 255, 255, 0);
+		outline-offset: 15px;
+	}
+}

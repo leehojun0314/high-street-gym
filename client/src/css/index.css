@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.required::before {
+		content: '*';
+		color: #ff7272;
+		position: relative;
+		left: -5px;
+		top: -7px;
+		display: inline-block;
+		height: 0px;
+		width: 0px;
+	}
+	@media (max-width: 768px) {
+		.required::before {
+			top: 3px; /* md 이상 화면에서 top 값 변경 */
+		}
+	}
+}
