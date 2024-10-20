@@ -2,7 +2,6 @@ import { TFields, TTableData } from '@/types';
 import Select from './Select';
 import Input from '../atoms/Input';
 import Checkbox from '../atoms/CheckBox';
-import { formatTimeForInput } from '@/utils';
 
 export default function MTInput({
   fields,
@@ -10,14 +9,14 @@ export default function MTInput({
   tableData = {},
   editPrimaryKey = false,
   optionDefault = true,
-  checkboxDefault = true,
-}: {
+}: // checkboxDefault = true,
+{
   fields: TFields;
   field: string;
   editPrimaryKey?: boolean;
   tableData?: TTableData;
   optionDefault?: boolean;
-  checkboxDefault?: boolean;
+  // checkboxDefault?: boolean;
 }) {
   return (
     <>
@@ -26,7 +25,7 @@ export default function MTInput({
           type='number'
           name={field}
           className='hidden'
-          defaultValue={tableData[fields[field].name] ?? ''}
+          defaultValue={tableData[fields[field].name]?.toString()}
         />
       ) : fields[field].isForeignKey ? (
         <Select
@@ -49,18 +48,18 @@ export default function MTInput({
           type='number'
           name={field}
           placeholder={field}
-          defaultValue={tableData[fields[field].name] ?? ''}
+          defaultValue={tableData[fields[field].name]?.toString() ?? ''}
         />
       ) : fields[field].typeName === 'String' ? (
         <Input
           type='text'
           name={field}
           placeholder={field}
-          defaultValue={tableData[fields[field].name] ?? ''}
+          defaultValue={tableData[fields[field].name]?.toString() ?? ''}
         />
       ) : fields[field].typeName === 'LongString' ? (
         <textarea
-          defaultValue={tableData[fields[field].name] as string}
+          defaultValue={tableData[fields[field].name]?.toString()}
           className='textarea textarea-bordered w-full'
           name={field}
         ></textarea>
@@ -71,26 +70,29 @@ export default function MTInput({
           defaultValue={
             tableData[fields[field].name]
               ? new Date(tableData[fields[field].name] as string)
+                  .toISOString()
+                  .slice(0, 16)
               : ''
           }
+        />
+      ) : fields[field].typeName === 'Date' ? (
+        <Input
+          type='date'
+          name={field}
+          placeholder={field}
+          defaultValue={(tableData[fields[field].name] as string) ?? ''}
         />
       ) : fields[field].typeName === 'Time' ? (
         <Input
           type='time'
           name={field}
           placeholder={field}
-          defaultValue={formatTimeForInput(
-            (tableData[fields[field].name] as string) ?? '',
-          )}
+          defaultValue={(tableData[fields[field].name] as string) ?? ''}
         />
       ) : fields[field].typeName === 'Boolean' ? (
         <Checkbox
           name={field}
-          defaultChecked={
-            !checkboxDefault
-              ? undefined
-              : (tableData[fields[field].name] as boolean) ?? false
-          }
+          defaultChecked={(tableData[fields[field].name] as boolean) ?? false}
         />
       ) : fields[field].isEnum === true ? (
         <Select

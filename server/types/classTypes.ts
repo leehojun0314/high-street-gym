@@ -31,4 +31,5 @@ export type TClass = {
   class_trainer_user_id: number;
   class_datetime: string;
   class_name: string;
+  is_recurring: boolean;
 };

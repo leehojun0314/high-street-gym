@@ -18,16 +18,31 @@ export async function patchData(req: TExtendedRequest, res: Response) {
       case 'class': {
         const { class_id, ...data } = req.body;
         console.log('data: ', data);
+
         await prisma.class.update({
           where: {
             class_id,
+            class_trainer_user_id:
+              user?.user_role === 'TRAINER'
+                ? user?.user_id
+                : data.class_trainer_user_id,
           },
-          data: data,
+          data: {
+            ...data,
+            is_recurring: data.is_recurring ? data.is_recurring : false,
+            //form tag doesn't send the checkbox value if it is not checked.
+          },
         });
         break;
       }
       case 'booking': {
         const { booking_id, ...data } = req.body;
+        if (user?.user_id !== data.booking_user_id) {
+          res
+            .status(401)
+            .send("You don't have permission to modify this user.");
+          return;
+        }
         await prisma.booking.update({
           where: {
             booking_id,
@@ -66,6 +81,7 @@ export async function patchData(req: TExtendedRequest, res: Response) {
           data: {
             ...data,
             user_password: password,
+            dob: new Date(data.dob),
           },
         });
         break;

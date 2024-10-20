@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE activities-upload [
+    <!ELEMENT activities-upload (activities)>
+    <!ATTLIST activities-upload operation (insert|update) "insert">
+    <!ELEMENT activities (activity+)>
+    <!ELEMENT activity (activity_id?, activity_name, activity_description?, activity_duration, activity_type)>
+    <!ELEMENT activity_id (#PCDATA)>
+    <!ELEMENT activity_name (#PCDATA)>
+    <!ELEMENT activity_description (#PCDATA)>
+    <!ELEMENT activity_duration (#PCDATA)>
+    <!ELEMENT activity_type (#PCDATA)>
+]>

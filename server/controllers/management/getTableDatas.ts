@@ -53,12 +53,25 @@ export async function getTableDatas(req: TExtendedRequest, res: Response) {
         case 'booking': {
           const bookings = await prisma.booking.findMany({
             where: filters,
+            include: {
+              User: {
+                select: {
+                  user_firstname: true,
+                  user_lastname: true,
+                },
+              },
+            },
           });
 
           const fields = prisma.booking.fields;
           const members = await prisma.user.findMany({
             where: {
               user_role: 'MEMBER',
+            },
+          });
+          const trainers = await prisma.user.findMany({
+            where: {
+              user_role: 'ADMIN',
             },
           });
           const classes = await prisma.class.findMany();
@@ -72,9 +85,9 @@ export async function getTableDatas(req: TExtendedRequest, res: Response) {
               ...fields['booking_user_id'],
               isForeignKey: true,
               label: 'booked_by',
-              options: members.map((user) => ({
-                value: user.user_id,
-                label: user.user_firstname + ' ' + user.user_lastname,
+              options: trainers.map((user_) => ({
+                value: user_.user_id,
+                label: user_.user_firstname + ' ' + user_.user_lastname,
               })),
             },
             booking_class_id: {
@@ -110,9 +123,13 @@ export async function getTableDatas(req: TExtendedRequest, res: Response) {
               ...fields['class_id'],
               isPrimaryKey: true,
             },
-            class_datetime: {
-              ...fields['class_datetime'],
-              typeName: 'DateTime',
+            class_date: {
+              ...fields['class_date'],
+              typeName: 'Date',
+            },
+            class_time: {
+              ...fields['class_time'],
+              typeName: 'Time',
             },
             class_trainer_user_id: {
               ...fields['class_trainer_user_id'],
@@ -272,7 +289,7 @@ export async function getTableDatas(req: TExtendedRequest, res: Response) {
 
         case 'class': {
           const classes = await prisma.class.findMany({
-            where: filters,
+            where: { ...filters, class_trainer_user_id: user.user_id },
           });
 
           const locations = await prisma.location.findMany();
@@ -291,18 +308,24 @@ export async function getTableDatas(req: TExtendedRequest, res: Response) {
               ...fields['class_id'],
               isPrimaryKey: true,
             },
-            class_datetime: {
-              ...fields['class_datetime'],
-              typeName: 'DateTime',
+            class_date: {
+              ...fields['class_date'],
+              typeName: 'Date',
+            },
+            class_time: {
+              ...fields['class_time'],
+              typeName: 'Time',
             },
             class_trainer_user_id: {
               ...fields['class_trainer_user_id'],
               isForeignKey: true,
               label: 'class_trainer',
-              options: trainers.map((user) => ({
-                value: user.user_id,
-                label: user.user_firstname + ' ' + user.user_lastname,
-              })),
+              options: trainers
+                .map((user) => ({
+                  value: user.user_id,
+                  label: user.user_firstname + ' ' + user.user_lastname,
+                }))
+                .filter((trainer) => trainer.value === user.user_id),
             },
             class_location_id: {
               ...fields['class_location_id'],

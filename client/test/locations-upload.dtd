@@ -1,0 +1,9 @@
+<?xml version=“1.0” encoding=“UTF-8”?>
+<!DOCTYPE locations-upload [
+    <!ELEMENT locations-upload (locations)>
+    <!ATTLIST locations-upload operation (insert) “insert”>
+    <!ELEMENT locations (location+)>
+    <!ELEMENT location (id?, name)>
+    <!ELEMENT id (#PCDATA)>
+    <!ELEMENT name (#PCDATA)>
+]>

@@ -6,7 +6,10 @@ export type TClass = {
   class_activity_id: number;
   class_trainer_user_id: number;
   class_name: string;
-  class_datetime: string;
+  // class_datetime: string;
+  class_date: string;
+  class_time: string;
+  is_recurring: boolean;
 };
 export type TExtendedClass = TClass & {
   Location: TLocation;

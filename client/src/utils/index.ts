@@ -10,6 +10,20 @@ export function getDateByDate(date: Date) {
     .toString()
     .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
 }
+export function getDateBySting(date: string) {
+  const [year, month, day] = date.split('T')[0].split('-');
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  // return `${date.getFullYear()}-${date
+  //   .getMonth()
+  //   .toString()
+  //   .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+}
+export function getTimebyDate(date: Date) {
+  return `${date.getHours().toString().padStart(2, '0')}:${date
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}`;
+}
 export function getTimeByString(date: string) {
   const [hours, minutes] = date.split(':');
   return `${hours}:${minutes}`;
@@ -50,7 +64,7 @@ export function convertDateToISO8601(dateStr: string) {
   const isoString = `${year}-${month.padStart(2, '0')}-${day.padStart(
     2,
     '0',
-  )}T00:00:00Z`;
+  )}T00:00:00`;
   return isoString;
 }
 export function convertONOFF(str: 'on' | 'off') {
@@ -75,15 +89,19 @@ export function remapData(
     if (!data[key] && nullableFields.includes(key)) {
       data[key] = null;
     }
-    if (key === 'class_datetime') {
-      data[key] = new Date(data[key] as string).toISOString();
-    }
+    // if (key === 'class_datetime') {
+    //   data[key] = new Date(data[key] as string).toISOString();
+    // }
     // if (key === 'class_time') {
     //   data[key] = convertTimeToISO8601(data[key] as string);
     // }
+
     // if (key === 'class_date' || key === 'dob') {
     //   data[key] = convertDateToISO8601(data[key] as string);
     // }
+    if (key === 'dob' && data[key]) {
+      data[key] = convertDateToISO8601(data[key] as string);
+    }
     if (key.endsWith('id')) {
       data[key] = Number(data[key]);
     }

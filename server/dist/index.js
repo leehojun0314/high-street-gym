@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 app.use((req, res, next) => {
+    console.log('req.url: ', req.url);
     res.status(404).send('Not found');
 });
 app.use((err, req, res, next) => {
@@ -27,5 +28,4 @@ app.use((err, req, res, next) => {
 });
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-    console.log('process env ', process.env);
 });

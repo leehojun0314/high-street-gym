@@ -43,9 +43,9 @@ export default function MTCard({
           ref={checkBoxRef}
         />
 
-        {Object.keys(fields).map((field) => (
+        {Object.keys(fields).map((field, index) => (
           <MTCardFields
-            key={field}
+            key={index}
             fields={fields}
             tableData={tableData}
             field={field}

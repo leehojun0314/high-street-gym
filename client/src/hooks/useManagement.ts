@@ -28,6 +28,7 @@ export default function useManagement() {
       title: 'XML Upload',
       clickOutside: true,
       cancelBtn: true,
+
       onClose: () => {
         console.log('on modal close: ', xmlInputRef);
         if (xmlInputRef.current) {
@@ -117,14 +118,19 @@ export default function useManagement() {
   }, [currentTable, setTableDatas, setFields]);
   const onUploadSuccess = useCallback(() => {
     console.log('upload success');
-  }, []);
+    window.alert('XML file uploaded successfully.');
+    toggleUploadModal(false);
+    fetchData();
+  }, [fetchData, toggleUploadModal]);
   const handleEditSubmit = useCallback(
     (evt: React.FormEvent<HTMLFormElement>) => {
       evt.preventDefault();
       const formData = new FormData(evt.currentTarget);
-      const data = Object.fromEntries(formData.entries());
+      const entries = formData.entries();
+      const data = Object.fromEntries(entries);
       console.log('form data: ', formData);
       console.log('data: ', data);
+      console.log('entries: ', entries);
       const [error, remappedData] = remapData(data);
       if (error) {
         return;

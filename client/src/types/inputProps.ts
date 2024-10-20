@@ -11,5 +11,5 @@ export type TInputProps = {
   value?: string;
   required?: boolean;
   readOnly?: boolean;
-  defaultValue?: string | number | Date | boolean;
+  defaultValue?: string | number | readonly string[] | undefined;
 };

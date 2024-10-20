@@ -45,13 +45,28 @@ export default function Management() {
             ))}
           </Select>
         )}
-        <PrimaryBtn className='w-20' onClick={toggleNewModal}>
+        <PrimaryBtn
+          className='w-20'
+          onClick={() => {
+            toggleNewModal();
+          }}
+        >
           New
         </PrimaryBtn>
-        <button className='btn btn-warning w-20' onClick={toggleUploadModal}>
+        <button
+          className='btn btn-warning w-20'
+          onClick={() => {
+            toggleUploadModal();
+          }}
+        >
           Upload
         </button>
-        <SecondaryBtn className='w-20' onClick={toggleFilterModal}>
+        <SecondaryBtn
+          className='w-20'
+          onClick={() => {
+            toggleFilterModal();
+          }}
+        >
           Filters
         </SecondaryBtn>
       </div>

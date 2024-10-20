@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE activities-upload [
+    <!ELEMENT activities-upload (activities)>
+    <!ATTLIST activities-upload operation (insert|update) "insert">
+    <!ELEMENT activities (activity+)>
+    <!ELEMENT activity (activity-id?, activity-name, activity-description?, activity-duration, activity-type)>
+    <!ELEMENT activity-id (#PCDATA)>
+    <!ELEMENT activity-name (#PCDATA)>
+    <!ELEMENT activity-description (#PCDATA)>
+    <!ELEMENT activity-duration (#PCDATA)>
+    <!ELEMENT activity-type (#PCDATA)>
+]>
+<activities-upload operation="insert">
+    <activities>
+        <activity>
+            <activity-name>Yoga</activity-name>
+            <activity-description>Morning yoga session for all levels.</activity-description>
+            <activity-duration>60</activity-duration>
+            <activity-type>GROUP</activity-type>
+        </activity>
+        <activity>
+            <activity-name>Pilates</activity-name>
+            <activity-description>Core strengthening and flexibility.</activity-description>
+            <activity-duration>45</activity-duration>
+            <activity-type>GROUP</activity-type>
+        </activity>
+        <activity>
+            <activity-name>Boxing</activity-name>
+            <activity-description>High-intensity boxing workout.</activity-description>
+            <activity-duration>30</activity-duration>
+            <activity-type>GROUP</activity-type>
+        </activity>
+        <activity>
+            <activity-name>Swimming</activity-name>
+            <activity-description>Freestyle swimming for intermediate levels.</activity-description>
+            <activity-duration>90</activity-duration>
+            <activity-type>PRIVATE</activity-type>
+        </activity>
+        <activity>
+            <activity-name>Dance</activity-name>
+            <activity-description>Contemporary dance class for beginners.</activity-description>
+            <activity-duration>60</activity-duration>
+            <activity-type>PRIVATE</activity-type>
+        </activity>
+    </activities>
+</activities-upload>

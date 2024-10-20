@@ -12,8 +12,8 @@ export default function LocationSection() {
     };
   }, []);
   return (
-    <section className='flex flex-row p-6 items-center'>
-      <div className='flex flex-col gap-[10px] w-full'>
+    <section className='flex flex-row p-6 items-center gap-3'>
+      <div className='flex flex-col gap-[10px] flex-1'>
         {/* left */}
         <div className='md:w-[400px] bg-black text-white'>
           {/* menu */}
@@ -97,7 +97,7 @@ export default function LocationSection() {
           </div>
         </div>
       </div>
-      <div className='md:block hidden w-full p-[5%]'>
+      <div className='md:block hidden flex-[3]'>
         {/* right */}
         {locations.map((location, index) => {
           return (

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE locations-upload [
+    <!ELEMENT locations-upload (locations)>
+    <!ATTLIST locations-upload operation (insert) "insert">
+    <!ELEMENT locations (location+)>
+    <!ELEMENT location (id?, name)>
+    <!ELEMENT id (#PCDATA)>
+    <!ELEMENT name (#PCDATA)>
+]>
+
+<locations-upload operation="insert">
+    <locations>
+        <location>
+            <name>Ashegrove</name>
+        </location>
+        <location>
+            <name>Riverhills</name>
+        </location>
+        <location>
+            <name>Chermside</name>
+        </location>
+        <location>
+            <name>Graceville</name>
+        </location>
+        <location>
+            <name>Westlake</name>
+        </location>
+    </locations>
+</locations-upload>

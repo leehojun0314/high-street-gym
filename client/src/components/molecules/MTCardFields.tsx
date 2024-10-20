@@ -1,5 +1,5 @@
 import { TFields, TTableData } from '@/types';
-import { formatTimeForInput, getDateByDate } from '@/utils';
+import { getDateBySting } from '@/utils';
 import React from 'react';
 import MTInput from './MTInput';
 
@@ -27,9 +27,9 @@ export default function MTCardFields({
               (option) => option.value === tableData[fields[field].name],
             )?.label
           : fields[field].typeName === 'Time'
-          ? formatTimeForInput(tableData[fields[field].name] as string)
+          ? (tableData[fields[field].name] as string)
           : fields[field].typeName === 'Date' && tableData[fields[field].name]
-          ? getDateByDate(new Date(tableData[fields[field].name] as string))
+          ? getDateBySting(tableData[fields[field].name] as string)
           : fields[field].typeName === 'Boolean'
           ? String(tableData[fields[field].name])
           : fields[field].typeName === 'LongString'

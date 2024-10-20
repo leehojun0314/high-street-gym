@@ -1,1 +1,1 @@
-export const nullableFields = ['class_date'];
+export const nullableFields = ['class_date', 'dob'];

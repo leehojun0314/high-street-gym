@@ -1,32 +1,38 @@
 import { axiosAPI } from '@/libs/axiosAPI';
 
 import useModal from '@/hooks/useModal';
-import { TClass, TExtendedClass, TLocation } from '@/types';
-import { useCallback, useEffect, useState } from 'react';
+import { TBooking, TExtendedClass, TLocation } from '@/types';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { DateClickArg } from '@fullcalendar/interaction/index.js';
-import { DateInput, EventClickArg } from '@fullcalendar/core/index.js';
-import useAuthenticate from './useAuthenticate';
+import { EventClickArg } from '@fullcalendar/core/index.js';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { AppContext } from '@/contexts/AppContext';
 export default function useBooking() {
-  const { user } = useAuthenticate();
+  // const { user } = useAuthenticate();
+  const { user } = useContext(AppContext);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [myBookings, setMyBookings] = useState<TBooking[]>([]);
   const [selectedDateClasses, setSelectedDateClasses] = useState<
     TExtendedClass[]
   >([]);
-  const [currentDate] = useState(new Date());
+  const [clickedDate, setClickedDate] = useState<string>();
   const [classes, setClasses] = useState<TExtendedClass[]>([]);
   const [location, setLocation] = useState<string>('');
   const [locations, setLocations] = useState<TLocation[]>([]);
   const [selectedClass, setSelectedClass] = useState<{
     id: string;
     title: string;
-    datetime: DateInput;
+    // datetime: DateInput;
+    date: string;
+    time: string;
   }>({
     id: '',
     title: '',
-    datetime: '',
+    // datetime: '',
+    date: '',
+    time: '',
   });
   const {
     modalProps: selectBookingModalProps,
@@ -51,80 +57,106 @@ export default function useBooking() {
       const form = new FormData(event.currentTarget);
       const data = Object.fromEntries(form.entries());
       console.log('data: ', data);
-      axiosAPI
-        .post('/booking/new', data)
-        .then((res) => {
-          console.log('booking res: ', res);
-          alert('Booking success!');
-          toggleConfirmBookingModal();
-          // setSelectedClass();
-        })
-        .catch((err: AxiosError) => {
-          console.error('booking err: ', err);
-          if (err.response?.status === 401) {
-            alert('You must be logged in to book a class');
-            navigate('/login');
-            return;
-          }
-          alert(err.response?.data ?? 'Booking failed.');
-        });
+      submitNewBooking(data as { class_id: string });
     },
   });
-
+  function handleBookingClick(class_id: number) {
+    return () => {
+      // submitNewBooking({ class_id });
+      toggleConfirmBookingModal();
+      const c = classes.find((c) => c.class_id === class_id)!;
+      setSelectedClass({
+        id: c.class_id.toString(),
+        title: c.class_name,
+        date: c.class_date,
+        time: c.class_time,
+      });
+    };
+  }
+  function submitNewBooking({ class_id }: { class_id: string }) {
+    return axiosAPI
+      .post('/booking/new', { class_id })
+      .then((res) => {
+        console.log('booking res: ', res);
+        //reset booking status
+        return getMyBookings();
+      })
+      .then((myBookingsRes) => {
+        setMyBookings(myBookingsRes.data);
+        alert('Booking success!');
+        toggleConfirmBookingModal(false);
+        toggleSelectBookingModal(false);
+      })
+      .catch((err: AxiosError) => {
+        console.error('booking err: ', err);
+        if (err.response?.status === 401) {
+          alert('You must be logged in to book a class');
+          navigate('/login');
+          return;
+        }
+        alert(err.response?.data ?? 'Booking failed.');
+      });
+  }
   function handleDateClick(arg: DateClickArg) {
-    console.log('user:', user);
     if (!user) {
       alert('You must be logged in to book a class');
       navigate('/login');
     }
-    console.log('handleDateClick', arg);
     const dateStr = arg.dateStr;
     console.log('date str: ', dateStr);
-    const filteredClasses = classes.filter((c: TClass) => {
-      return c.class_datetime.split('T')[0] === dateStr;
+    const filteredClasses = classes.filter((c: TExtendedClass) => {
+      if (c.is_recurring) {
+        return new Date(c.class_date).getDay() === new Date(dateStr).getDay();
+      } else {
+        return c.class_date.split('T')[0] === dateStr;
+      }
     });
-    setSelectedDateClasses(filteredClasses);
+    const mappedClasses = filteredClasses.map((c: TExtendedClass) => {
+      if (c.is_recurring) {
+        return { ...c, class_date: dateStr };
+      } else {
+        return c;
+      }
+    });
+    setClickedDate(dateStr);
+    setSelectedDateClasses(mappedClasses);
     toggleSelectBookingModal();
   }
   function handleEventClick(arg: EventClickArg) {
     console.log('handle Event click id: ', arg.event.id);
     console.log('user:', user);
+    console.log('startstr: ', arg.event.startStr);
+    console.log('start: ', arg.event.start);
+    console.log('time: ', arg.event.extendedProps.time);
+
     if (!user) {
       alert('You must be logged in to book a class');
       navigate('/login');
       return;
     }
+    if (myBookings.some((b) => b.booking_class_id === parseInt(arg.event.id))) {
+      alert('You have already booked this class.');
+      return;
+    }
     setSelectedClass({
       id: arg.event.id,
       title: arg.event.title,
-      datetime: arg.event.startStr,
+      // datetime: arg.event.startStr,
+      date: arg.event.startStr,
+      time: arg.event.extendedProps.time,
     });
     toggleConfirmBookingModal();
   }
-  // const handleDateClick = (arg: any) => {
-  //   const selectedDate = new Date(arg.dateStr);
-  //   const filteredClasses = classes.filter(
-  //     (c) => c.class_date.toDateString() === selectedDate.toDateString(),
-  //   );
-  //   setSelectedDateClasses(filteredClasses);
-  //   setModalIsOpen(true);
-  // };
 
-  // const closeModal = () => {
-  //   setModalIsOpen(false);
-  // };
-
-  const getClasses = useCallback(
-    (locationId: string) => {
-      return axiosAPI
-        .get(`/class?location=${locationId}&date=${currentDate.toISOString()}`)
-        .then((res) => {
-          console.log('get classes res:', res.data);
-          setClasses(res.data);
-        });
-    },
-    [currentDate],
-  );
+  const getMyBookings = useCallback(() => {
+    return axiosAPI.get(`/booking/my`);
+  }, []);
+  const getClasses = useCallback((locationId: string) => {
+    return axiosAPI.get(`/class?location=${locationId}`).then((res) => {
+      console.log('get classes res:', res.data);
+      setClasses(res.data);
+    });
+  }, []);
   const getLocations = useCallback(() => {
     return axiosAPI.get('/location/all');
   }, []);
@@ -147,27 +179,37 @@ export default function useBooking() {
     },
     [getClasses, isLoading],
   );
-  useEffect(() => {
-    getLocations()
-      .then((locationRes) => {
-        console.log('location res:', locationRes);
-        setLocation(locationRes.data[0].location_name);
-        setLocations(locationRes.data);
-        return getClasses(locationRes.data[0].location_id);
-      })
+  const init = useCallback(async () => {
+    try {
+      let myBookingsRes = null;
+      let locationRes;
+      if (user) {
+        [myBookingsRes, locationRes] = await Promise.all([
+          getMyBookings(),
+          getLocations(),
+        ]);
+        setMyBookings(myBookingsRes.data);
+      } else {
+        locationRes = await getLocations();
+      }
+      await getClasses(locationRes.data[0].location_id);
 
-      .catch((err) => {
-        console.log('err: ', err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [getLocations, getClasses]);
+      setLocation(locationRes.data[0].location_name);
+      setLocations(locationRes.data);
+    } catch (error) {
+      console.log('err: ', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, getMyBookings, getLocations, getClasses]);
+  useEffect(() => {
+    init();
+  }, [init]);
   return {
     classes,
     location,
     locations,
-    currentDate,
+    clickedDate,
     handleDateClick,
     selectBookingModalProps,
     handleLocationChange,
@@ -175,5 +217,7 @@ export default function useBooking() {
     handleEventClick,
     confirmBookingModalProps,
     selectedClass,
+    myBookings,
+    handleBookingClick,
   };
 }

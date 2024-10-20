@@ -1,4 +1,4 @@
-import { TInputProps } from '@/types/props/inputProps';
+import { TInputProps } from '@/types/inputProps';
 import React from 'react';
 
 export default function Input({
@@ -10,7 +10,6 @@ export default function Input({
   name,
   autoComplete,
   id,
-  value,
   required,
   readOnly,
   defaultValue,
@@ -22,10 +21,9 @@ export default function Input({
       name={name}
       autoComplete={autoComplete}
       id={id}
-      value={value}
       required={required}
       readOnly={readOnly}
-      className={`border-gray-400 border rounded-lg p-2 ${className}`}
+      className={`input input-bordered w-full max-w-xs ${className}`}
       defaultValue={defaultValue}
       {...register}
     >

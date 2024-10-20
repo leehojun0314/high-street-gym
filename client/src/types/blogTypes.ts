@@ -1,7 +1,7 @@
 export type TPost = {
-  post_id: number;
-  post_title: string;
-  post_content: string;
-  post_user_id: string;
-  post_datetime: string;
+  blog_id: number;
+  blog_title: string;
+  blog_content: string;
+  blog_user_id: string;
+  blog_datetime: string;
 };

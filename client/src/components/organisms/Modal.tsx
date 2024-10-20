@@ -20,7 +20,7 @@ const Modal = forwardRef(function (
         )}
         <h3 className='font-bold text-lg pb-4'>{props.title}</h3>
         {props.submitBtn ? (
-          <form onSubmit={props.onSubmit}>
+          <form onSubmit={props.onSubmit} method='dialog'>
             {props.children}
             <div className='modal-action'>
               {props.closeBtn && (

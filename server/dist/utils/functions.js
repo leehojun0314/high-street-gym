@@ -86,9 +86,9 @@ function remapFilters(obj) {
         if (key === 'dob') {
             newObj[key] = convertDateToISO8601(obj[key]);
         }
-        if (key === 'class_time') {
-            newObj[key] = convertTimeToISO8601(obj[key]);
-        }
+        // if (key === 'class_datetime') {
+        //   newObj[key] = obj[key]
+        // }
     }
     return newObj;
 }

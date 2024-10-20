@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 import FileInput from '../atoms/FileInput';
 import PrimaryBtn from '../atoms/PrimaryBtn';
@@ -39,7 +39,7 @@ const XMLUploader = forwardRef(function (
       setUploadProgress(0);
 
       await axiosAPI
-        .post('/xml/classes', formData, {
+        .post('/xml/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -52,12 +52,14 @@ const XMLUploader = forwardRef(function (
         })
         .then((res) => {
           console.log('upload success:', res);
+          setError('');
           onSuccess();
         })
         .catch((err: AxiosError) => {
           console.error('Error submitting class data:', err);
           // onError(err.response?.data as string);
-          setError(err.message as string);
+
+          setError(err.response?.data as string);
         })
         .finally(() => {
           setIsUploading(false);
@@ -67,7 +69,9 @@ const XMLUploader = forwardRef(function (
       setError('Unexpected error');
     }
   };
-
+  useEffect(() => {
+    setError('');
+  }, [file]);
   return (
     <div className='px-4 flex flex-col justify-center items-center'>
       {/* <input

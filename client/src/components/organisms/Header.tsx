@@ -79,6 +79,11 @@ export default function Header() {
             Log In
           </Link>
         )}
+        {user && (
+          <Link to='profile' className={headerStyle.link} onClick={handleClick}>
+            My Profile
+          </Link>
+        )}
         {user?.user_role === 'ADMIN' && (
           <Link
             className={headerStyle.link}
@@ -109,6 +114,13 @@ export default function Header() {
               <a className={headerStyle.link} onClick={handleLogout}>
                 Log out
               </a>
+              <Link
+                to='profile'
+                className={headerStyle.link}
+                onClick={handleClick}
+              >
+                My Profile
+              </Link>
             </>
           ) : (
             <Link className={headerStyle.link} to='login'>

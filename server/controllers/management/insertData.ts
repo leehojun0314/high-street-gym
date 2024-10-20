@@ -7,6 +7,8 @@ export async function insertData(req: TExtendedRequest, res: Response) {
     const user = req.user;
     const { table } = req.params;
     const data = req.body;
+    console.log('data:', data);
+    console.log('insert endpoint logged in user: ', user);
     if (user?.user_role === 'TRAINER') {
       if (table !== 'class' && table !== 'activity') {
         res.status(401).send("You don't have permission to modify this table.");

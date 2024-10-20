@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Location {
-  location_id   Int     @id @default(autoincrement())
+  location_id   Int     @id @unique @default(autoincrement())
   location_name String
   Class         Class[]
 
@@ -22,7 +22,7 @@ model Location {
 }
 
 model Activity {
-  activity_id          Int          @id @default(autoincrement())
+  activity_id          Int          @id @unique @default(autoincrement())
   activity_name        String
   activity_description String       @db.LongText
   activity_duration    Int
@@ -39,7 +39,7 @@ enum ActivityType {
 }
 
 model Blog {
-  blog_id       Int      @id @default(autoincrement())
+  blog_id       Int      @id @unique @default(autoincrement())
   blog_datetime DateTime
   blog_user_id  Int
   blog_title    String
@@ -52,17 +52,19 @@ model Blog {
 }
 
 model Class {
-  class_id              Int      @id @default(autoincrement())
+  class_id              Int       @id @unique @default(autoincrement())
   class_location_id     Int
   class_activity_id     Int
   class_trainer_user_id Int
-  class_datetime        DateTime @db.DateTime // Nullable for recurring classes
+  // class_datetime        DateTime  @db.DateTime 
+  class_date            String //To exclude time from DateTime field
+  class_time            String //To exclude date from DateTime field
   class_name            String
-
-  Location Location  @relation(fields: [class_location_id], references: [location_id])
-  Activity Activity  @relation(fields: [class_activity_id], references: [activity_id])
-  User     User      @relation(fields: [class_trainer_user_id], references: [user_id])
-  Booking  Booking[]
+  is_recurring          Boolean   @default(false)
+  Location              Location  @relation(fields: [class_location_id], references: [location_id])
+  Activity              Activity  @relation(fields: [class_activity_id], references: [activity_id])
+  User                  User      @relation(fields: [class_trainer_user_id], references: [user_id])
+  Booking               Booking[]
 
   @@index([class_location_id])
   @@index([class_activity_id])
@@ -71,7 +73,7 @@ model Class {
 }
 
 model Booking {
-  booking_id               Int      @id @default(autoincrement())
+  booking_id               Int      @id @unique @default(autoincrement())
   booking_user_id          Int
   booking_class_id         Int
   booking_created_datetime DateTime @default(now())
@@ -95,7 +97,7 @@ enum Weekday {
 }
 
 model User {
-  user_id        Int       @id @default(autoincrement())
+  user_id        Int       @id @unique @default(autoincrement())
   user_email     String    @unique
   user_password  String
   user_role      UserRole

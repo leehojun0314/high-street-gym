@@ -47,7 +47,7 @@ function patchData(req, res) {
                         where: {
                             class_id,
                         },
-                        data: data,
+                        data: Object.assign(Object.assign({}, data), { is_recurring: data.is_recurring ? data.is_recurring : false }),
                     });
                     break;
                 }

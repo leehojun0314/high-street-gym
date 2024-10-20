@@ -16,6 +16,7 @@ export default function Checkbox({
           <input
             type='checkbox'
             defaultChecked={defaultChecked}
+            name={name}
             className='toggle toggle-primary'
           />
         </label>
@@ -28,6 +29,7 @@ export default function Checkbox({
         className='toggle toggle-primary'
         name={name}
         defaultChecked={defaultChecked}
+        // checked={defaultChecked}
       />
     );
   }

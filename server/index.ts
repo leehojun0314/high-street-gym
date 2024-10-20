@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 app.use((req, res, next) => {
+  console.log('req.url: ', req.url);
   res.status(404).send('Not found');
 });
 app.use(
