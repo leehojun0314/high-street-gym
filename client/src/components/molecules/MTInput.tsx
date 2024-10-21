@@ -16,7 +16,6 @@ export default function MTInput({
   editPrimaryKey?: boolean;
   tableData?: TTableData;
   optionDefault?: boolean;
-  // checkboxDefault?: boolean;
 }) {
   return (
     <>

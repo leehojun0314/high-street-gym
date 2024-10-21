@@ -23,12 +23,7 @@ export default function MTFilterFields({
       {fields[field].isPrimaryKey ? (
         <Input type='number' name={field} />
       ) : (
-        <MTInput
-          fields={fields}
-          field={field}
-          optionDefault={false}
-          checkboxDefault={false}
-        />
+        <MTInput fields={fields} field={field} optionDefault={false} />
       )}
     </React.Fragment>
   );
